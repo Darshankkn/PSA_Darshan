@@ -16,20 +16,14 @@ annotate service.Projects with @(
 
     {
         $Type : 'UI.DataFieldForAction',
-        Action : 'CatalogService.submit',
-        Label : 'Submit Timesheet'
+        Action : 'CatalogService.generateInvoice',
+        Label : 'Generate Invoice'
     },
 
     {
         $Type : 'UI.DataFieldForAction',
-        Action : 'CatalogService.approve',
-        Label : 'Approve'
-    },
-
-    {
-        $Type : 'UI.DataFieldForAction',
-        Action : 'CatalogService.reject',
-        Label : 'Reject'
+        Action : 'CatalogService.recalculateBudget',
+        Label : 'Recalculate Budget'
     }
 
 ],

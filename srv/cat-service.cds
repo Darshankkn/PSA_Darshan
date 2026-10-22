@@ -116,7 +116,14 @@ service CatalogService {
        PROJECTS
        ========================== */
 
-    entity Projects as projection on db.Projects;
+    entity Projects as projection on db.Projects
+actions {
+
+    action recalculateBudget();
+
+    action generateInvoice();
+
+};
 
     action createProject(
         projectCode   : String,
@@ -324,7 +331,14 @@ actions {
        INVOICES
        ========================== */
 
-    entity Invoices as projection on db.Invoices;
+    entity Invoices as projection on db.Invoices
+actions {
+
+    action issue();
+
+    action markPaid();
+
+};
 
     action createInvoice(
         invoiceNumber : String,
@@ -355,29 +369,29 @@ actions {
         ID : UUID
     ) returns String;
 
-    action issueInvoice(
-        ID : UUID
-    ) returns Invoices;
+    // action issueInvoice(
+    //     ID : UUID
+    // ) returns Invoices;
 
-    action markInvoicePaid(
-        ID          : UUID,
-        paymentDate : Date
-    ) returns Invoices;
+    // action markInvoicePaid(
+    //     ID          : UUID,
+    //     paymentDate : Date
+    // ) returns Invoices;
 
 
     /* ==========================
        BUSINESS ACTIONS
        ========================== */
 
-    action recalculateBudget(
-        ID : UUID
-    ) returns Budgets;
+    // action recalculateBudget(
+    //     ID : UUID
+    // ) returns Budgets;
 
-    action generateInvoice(
-        projectID  : UUID,
-        periodFrom : Date,
-        periodTo   : Date
-    ) returns Invoices;
+    // action generateInvoice(
+    //     projectID  : UUID,
+    //     periodFrom : Date,
+    //     periodTo   : Date
+    // ) returns Invoices;
 
 
     /* ==========================

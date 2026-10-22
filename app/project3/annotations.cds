@@ -20,6 +20,27 @@ annotate service.Timesheets with @(
         weekStartDate,
         weekEndDate
     ],
+    UI.Identification : [
+
+    {
+        $Type : 'UI.DataFieldForAction',
+        Action : 'CatalogService.submitTimesheet',
+        Label : 'Submit Timesheet'
+    },
+
+    {
+        $Type : 'UI.DataFieldForAction',
+        Action : 'CatalogService.approveTimesheet',
+        Label : 'Approve Timesheet'
+    },
+
+    {
+        $Type : 'UI.DataFieldForAction',
+        Action : 'CatalogService.rejectTimesheet',
+        Label : 'Reject Timesheet'
+    }
+
+],
 
     UI.LineItem : [
 

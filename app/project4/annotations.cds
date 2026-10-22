@@ -1,36 +1,3 @@
-// using CatalogService as service from '../../srv/cat-service';
-
-// annotate service.Invoices with @(
-
-//     UI.HeaderInfo : {
-//         TypeName : 'Invoice',
-//         TypeNamePlural : 'Invoices',
-//         Title : {
-//             Value : invoiceNumber
-//         }
-//     },
-
-//     UI.LineItem : [
-//         {
-//             Value : invoiceNumber,
-//             Label : 'Invoice Number'
-//         },
-//         {
-//             Value : billableHours,
-//             Label : 'Billable Hours'
-//         },
-//         {
-//             Value : totalAmount,
-//             Label : 'Total Amount'
-//         },
-//         {
-//             Value : paymentStatus,
-//             Label : 'Payment Status'
-//         }
-//     ]
-// );
-
-
 using CatalogService as service from '../../srv/cat-service';
 
 annotate service.Invoices with @(
@@ -47,6 +14,22 @@ annotate service.Invoices with @(
             Value : paymentStatus
         }
     },
+
+    UI.Identification : [
+
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.issue',
+            Label : 'Issue Invoice'
+        },
+
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.markPaid',
+            Label : 'Mark Invoice Paid'
+        }
+
+    ],
 
     UI.SelectionFields : [
         invoiceNumber,

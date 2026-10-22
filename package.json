@@ -8,7 +8,9 @@
     "watch-project1": "cds watch --open project1/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-project2": "cds watch --open enterprisepsa.project2/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-project3": "cds watch --open project3/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-project4": "cds watch --open project4/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-project4": "cds watch --open project4/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-managerdashboard": "cds watch --open managerdashboard/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-manager": "cds watch --open manager/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +32,7 @@
     "app/project1",
     "app/project2",
     "app/project3",
-    "app/project4"
+    "app/project4",
+    "app/managerdashboard"
   ]
 }

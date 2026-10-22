@@ -588,29 +588,31 @@ module.exports = cds.service.impl(async function () {
 
     this.on('recalculateBudget', async (req) => {
 
-    const { ID } = req.data;
-
-    const budget = await SELECT.one
-        .from(Budgets)
-        .where({ ID });
-
-    if (!budget) {
-        return req.reject(
-            404,
-            'Budget not found'
-        );
-    }
+    const projectID = req.params[0].ID;
 
     const project = await SELECT.one
         .from(Projects)
         .where({
-            ID: budget.project_ID
+            ID: projectID
         });
 
     if (!project) {
         return req.reject(
             404,
             'Project not found'
+        );
+    }
+
+    const budget = await SELECT.one
+        .from(Budgets)
+        .where({
+            project_ID: projectID
+        });
+
+    if (!budget) {
+        return req.reject(
+            404,
+            'Budget not found'
         );
     }
 
@@ -631,8 +633,11 @@ module.exports = cds.service.impl(async function () {
         ) * 100;
 
     if (burnPercentage >= 100) {
+
         budgetStatus = 'Breached';
+
     } else if (burnPercentage >= 80) {
+
         budgetStatus = 'AtRisk';
     }
 
@@ -642,13 +647,16 @@ module.exports = cds.service.impl(async function () {
             remainingAmount,
             budgetStatus
         })
-        .where({ ID });
+        .where({
+            ID: budget.ID
+        });
 
     return await SELECT.one
         .from(Budgets)
-        .where({ ID });
+        .where({
+            ID: budget.ID
+        });
 });
-
     /* ==========================
        MILESTONES
        ========================== */
@@ -958,11 +966,7 @@ this.on('rejectTimesheet', async (req) => {
 
     this.on('generateInvoice', async (req) => {
 
-    const {
-        projectID,
-        periodFrom,
-        periodTo
-    } = req.data;
+    const projectID = req.params[0].ID;
 
     const project = await SELECT.one
         .from(Projects)
@@ -1000,6 +1004,7 @@ this.on('rejectTimesheet', async (req) => {
 
     await INSERT.into(Invoices)
         .entries({
+
             invoiceNumber:
                 'INV-' + Date.now(),
 
@@ -1035,12 +1040,12 @@ this.on('rejectTimesheet', async (req) => {
     return await SELECT.one
         .from(Invoices)
         .orderBy({
-            createdAt: 'desc'
+            createdAt : 'desc'
         });
 });
-this.on('issueInvoice', async (req) => {
+this.on('issue', async (req) => {
 
-    const { ID } = req.data;
+    const ID = req.params[0].ID;
 
     const invoice = await SELECT.one
         .from(Invoices)
@@ -1072,9 +1077,9 @@ this.on('issueInvoice', async (req) => {
         .where({ ID });
 });
 
-this.on('markInvoicePaid', async (req) => {
+this.on('markPaid', async (req) => {
 
-    const { ID } = req.data;
+     const ID = req.params[0].ID;
 
     const invoice = await SELECT.one
         .from(Invoices)
