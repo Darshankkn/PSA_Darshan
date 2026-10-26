@@ -5,7 +5,7 @@
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
-      "version": "0.0.1"
+      "version": "1.0.0"
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:basic",
       "version": "1.33.0",
-      "toolsId": "d63a7367-2219-4c30-9524-fdca8087a95a"
+      "toolsId": "ffbe4927-bcc6-46a8-a876-9a3f6dc2a620"
     },
     "dataSources": {
       "mainService": {
@@ -67,8 +67,11 @@
         "preload": true,
         "settings": {
           "operationMode": "Server",
+          "synchronizationMode": "None",
           "autoExpandSelect": true,
-          "earlyRequests": true
+          "earlyRequests": true,
+          "groupId": "$auto",
+          "updateGroupId": "$auto"
         }
       }
     },
@@ -88,22 +91,22 @@
         "type": "View",
         "viewType": "XML",
         "path": "manager.view",
-        "async": true,
-        "viewPath": "manager.view"
+        "async": true
       },
       "routes": [
         {
-          "name": "RouteManager",
+          "name": "RouteView1",
           "pattern": ":?query:",
           "target": [
-            "TargetManager"
+            "TargetView1"
           ]
         }
       ],
       "targets": {
-        "TargetManager": {
-          "id": "Manager",
-          "name": "Manager"
+        "TargetView1": {
+          "id": "View1",
+          "name": "View1",
+          "viewLevel": 1
         }
       }
     },

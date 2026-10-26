@@ -1,0 +1,63 @@
+<mvc:View
+    controllerName="dashboardhub.dashboardhub.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Page
+        id="dashboardHubPage"
+        title="PSA Dashboard Hub">
+
+        <content>
+
+            <VBox
+                id="dashboardHubContent"
+                width="100%"
+                alignItems="Center"
+                class="sapUiLargeMarginTop">
+
+                <Title
+                    id="dashboardHubTitle"
+                    text="Professional Services Automation"
+                    level="H1"
+                    class="sapUiSmallMarginBottom" />
+
+                <Text
+                    id="dashboardHubSubtitle"
+                    text="Select a dashboard to continue"
+                    class="sapUiLargeMarginBottom" />
+
+                <Button
+                    id="employeeDashboardButton"
+                    text="Employee Dashboard"
+                    icon="sap-icon://employee"
+                    type="Emphasized"
+                    width="20rem"
+                    press=".onEmployeePress"
+                    class="sapUiSmallMarginBottom" />
+
+                <Button
+                    id="managerDashboardButton"
+                    text="Manager Dashboard"
+                    icon="sap-icon://manager"
+                    type="Emphasized"
+                    width="20rem"
+                    press=".onManagerPress"
+                    class="sapUiSmallMarginBottom" />
+
+                <Button
+                    id="adminDashboardButton"
+                    text="Admin Dashboard"
+                    icon="sap-icon://it-system"
+                    type="Emphasized"
+                    width="20rem"
+                    press=".onAdminPress"
+                    class="sapUiSmallMarginBottom" />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

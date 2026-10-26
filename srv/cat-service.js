@@ -1,7 +1,7 @@
-const cds = require('@sap/cds');
+const cds = require("@sap/cds");
+const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
 
 module.exports = cds.service.impl(async function () {
-
     const {
         Departments,
         Employees,
@@ -16,481 +16,618 @@ module.exports = cds.service.impl(async function () {
         Invoices
     } = this.entities;
 
-
-    /* =====================================================
-       CREATE DEPARTMENT
-       ===================================================== */
-
-    this.on('createDepartment', async (request) => {
-
-        const departmentData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Departments).entries(departmentData)
-        ).then(() => {
-
-            return departmentData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE EMPLOYEE
-       ===================================================== */
-
-    this.on('createEmployee', async (request) => {
-
-        const empData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Employees).entries({
-                firstName: empData.firstName,
-                lastName: empData.lastName,
-                email: empData.email,
-                jobTitle: empData.jobTitle,
-                joinDate: empData.joinDate,
-                hourlyRate: empData.hourlyRate,
-                status: empData.status,
-                department_ID: empData.departmentID
-            })
-        ).then(() => {
-
-            return empData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE MANAGER
-       ===================================================== */
-
-    this.on('createManager', async (request) => {
-
-        const managerData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Managers).entries({
-                employee_ID: managerData.employeeID,
-                department_ID: managerData.departmentID,
-                managerLevel: managerData.managerLevel,
-                status: managerData.status
-            })
-        ).then(() => {
-
-            return managerData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE CLIENT
-       ===================================================== */
-
-    this.on('createClient', async (request) => {
-
-        const clientData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Clients).entries({
-                clientName: clientData.clientName,
-                contactPerson: clientData.contactPerson,
-                email: clientData.email,
-                phoneNumber: clientData.phoneNumber,
-                country: clientData.country,
-                industry: clientData.industry,
-                status: clientData.status
-            })
-        ).then(() => {
-
-            return clientData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE PROJECT
-       ===================================================== */
-
-    this.on('createProject', async (request) => {
-
-        const projectData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Projects).entries({
-                projectCode: projectData.projectCode,
-                projectName: projectData.projectName,
-                status: projectData.status,
-                billingType: projectData.billingType,
-                startDate: projectData.startDate,
-                endDate: projectData.endDate,
-                plannedHours: projectData.plannedHours,
-                consumedHours: projectData.consumedHours,
-                client_ID: projectData.clientID,
-                manager_ID: projectData.managerID
-            })
-        ).then(() => {
-
-            return projectData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE BUDGET
-       ===================================================== */
-
-    this.on('createBudget', async (request) => {
-
-        const budgetData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Budgets).entries({
-                project_ID: budgetData.projectID,
-                budgetAmount: budgetData.budgetAmount,
-                consumedAmount: budgetData.consumedAmount,
-                remainingAmount: budgetData.remainingAmount,
-                billingRateHr: budgetData.billingRateHr,
-                currencyCode: budgetData.currencyCode,
-                budgetStatus: budgetData.budgetStatus
-            })
-        ).then(() => {
-
-            return budgetData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE MILESTONE
-       ===================================================== */
-
-    this.on('createMilestone', async (request) => {
-
-        const milestoneData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Milestones).entries({
-                project_ID: milestoneData.projectID,
-                milestoneName: milestoneData.milestoneName,
-                startDate: milestoneData.startDate,
-                endDate: milestoneData.endDate,
-                completionPercent: milestoneData.completionPercent,
-                status: milestoneData.status
-            })
-        ).then(() => {
-
-            return milestoneData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE TASK
-       ===================================================== */
-
-    this.on('createTask', async (request) => {
-
-        const taskData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Tasks).entries({
-                milestone_ID: taskData.milestoneID,
-                taskName: taskData.taskName,
-                startDate: taskData.startDate,
-                endDate: taskData.endDate,
-                status: taskData.status,
-                estimatedHours: taskData.estimatedHours,
-                actualHours: taskData.actualHours
-            })
-        ).then(() => {
-
-            return taskData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE TIMESHEET
-       ===================================================== */
-
-    this.on('createTimesheet', async (request) => {
-
-        const timesheetData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Timesheets).entries({
-                employee_ID: timesheetData.employeeID,
-                approvedBy_ID: timesheetData.approvedByID,
-                invoice_ID: timesheetData.invoiceID,
-                weekStartDate: timesheetData.weekStartDate,
-                weekEndDate: timesheetData.weekEndDate,
-                totalBillableHours: timesheetData.totalBillableHours,
-                submittedDate: timesheetData.submittedDate,
-                approvedDate: timesheetData.approvedDate,
-                status: timesheetData.status
-            })
-        ).then(() => {
-
-            return timesheetData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE TIMESHEET ENTRY
-       ===================================================== */
-
-    this.on('createTimesheetEntry', async (request) => {
-
-        const entryData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(TimesheetEntries).entries({
-                timesheet_ID: entryData.timesheetID,
-                task_ID: entryData.taskID,
-                workDate: entryData.workDate,
-                hours: entryData.hours,
-                billable: entryData.billable
-            })
-        ).then(() => {
-
-            return entryData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-
-    /* =====================================================
-       CREATE INVOICE
-       ===================================================== */
-
-    this.on('createInvoice', async (request) => {
-
-        const invoiceData = request.data;
-
-        const tx = cds.tx(request);
-
-        let result = await tx.run(
-            INSERT.into(Invoices).entries({
-                invoiceNumber: invoiceData.invoiceNumber,
-                project_ID: invoiceData.projectID,
-                client_ID: invoiceData.clientID,
-                invoiceDate: invoiceData.invoiceDate,
-                dueDate: invoiceData.dueDate,
-                billableHours: invoiceData.billableHours,
-                totalAmount: invoiceData.totalAmount,
-                taxAmount: invoiceData.taxAmount,
-                currencyCode: invoiceData.currencyCode,
-                paymentStatus: invoiceData.paymentStatus,
-                status: invoiceData.status
-            })
-        ).then(() => {
-
-            return invoiceData;
-
-        }).catch(err => {
-
-            request.error(500, err.toString());
-
-        });
-
-        return result;
-    });
-
-    /* ==========================
-       DEPARTMENTS
-       ========================== */
-
-    this.on('updateDepartment', async (req) => {
-        const { ID, departmentName, description } = req.data;
-
-        await UPDATE(Departments)
+    const dateOnly = (value = new Date()) =>
+        new Date(value).toISOString().slice(0, 10);
+
+    const cleanData = (data) =>
+        Object.fromEntries(
+            Object.entries(data).filter(
+                ([, value]) => value !== undefined
+            )
+        );
+
+    const boundID = (req) => {
+        const ID =
+            req.params?.[0]?.ID ||
+            req.data?.ID;
+
+        if (!ID) {
+            req.reject(
+                400,
+                "Record ID is required"
+            );
+        }
+
+        return ID;
+    };
+
+    const getOne = async (
+        req,
+        entity,
+        where,
+        message
+    ) => {
+        const record = await SELECT.one
+            .from(entity)
+            .where(where);
+
+        if (!record) {
+            req.reject(404, message);
+        }
+
+        return record;
+    };
+
+    const budgetStatusFor = (
+        consumedAmount,
+        budgetAmount
+    ) => {
+        const total = Number(
+            budgetAmount || 0
+        );
+
+        if (total <= 0) {
+            return "WithinBudget";
+        }
+
+        const percentage =
+            (
+                Number(consumedAmount || 0) /
+                total
+            ) * 100;
+
+        if (percentage >= 100) {
+            return "Breached";
+        }
+
+        if (percentage >= 80) {
+            return "AtRisk";
+        }
+
+        return "WithinBudget";
+    };
+
+    const recalculateProject = async (
+        projectID
+    ) => {
+        const milestones = await SELECT
+            .from(Milestones)
+            .where({
+                project_ID: projectID
+            });
+
+        let projectConsumedHours = 0;
+
+        for (const milestone of milestones) {
+            const tasks = await SELECT
+                .from(Tasks)
+                .where({
+                    milestone_ID:
+                        milestone.ID
+                });
+
+            for (const task of tasks) {
+                const taskEntries = await SELECT
+                    .from(TimesheetEntries)
+                    .where({
+                        task_ID: task.ID
+                    });
+
+                let approvedTaskHours = 0;
+
+                for (const entry of taskEntries) {
+                    const parentTimesheet =
+                        await SELECT.one
+                            .from(Timesheets)
+                            .where({
+                                ID:
+                                    entry.timesheet_ID
+                            });
+
+                    if (
+                        parentTimesheet &&
+                        (
+                            parentTimesheet.status ===
+                                "Approved" ||
+                            parentTimesheet.status ===
+                                "Invoiced"
+                        )
+                    ) {
+                        approvedTaskHours += Number(
+                            entry.hours || 0
+                        );
+                    }
+                }
+
+                approvedTaskHours = Number(
+                    approvedTaskHours.toFixed(2)
+                );
+
+                await UPDATE(Tasks)
+                    .set({
+                        actualHours:
+                            approvedTaskHours
+                    })
+                    .where({
+                        ID: task.ID
+                    });
+
+                projectConsumedHours +=
+                    approvedTaskHours;
+            }
+        }
+
+        projectConsumedHours = Number(
+            projectConsumedHours.toFixed(2)
+        );
+
+        await UPDATE(Projects)
             .set({
+                consumedHours:
+                    projectConsumedHours
+            })
+            .where({
+                ID: projectID
+            });
+
+        const budget = await SELECT.one
+            .from(Budgets)
+            .where({
+                project_ID: projectID
+            });
+
+        if (!budget) {
+            return null;
+        }
+
+        const budgetAmount = Number(
+            budget.budgetAmount || 0
+        );
+
+        const billingRateHr = Number(
+            budget.billingRateHr || 0
+        );
+
+        const consumedAmount = Number(
+            (
+                projectConsumedHours *
+                billingRateHr
+            ).toFixed(2)
+        );
+
+        const remainingAmount = Number(
+            (
+                budgetAmount -
+                consumedAmount
+            ).toFixed(2)
+        );
+
+        const budgetStatus =
+            budgetStatusFor(
+                consumedAmount,
+                budgetAmount
+            );
+
+        await UPDATE(Budgets)
+            .set({
+                consumedAmount,
+                remainingAmount,
+                budgetStatus
+            })
+            .where({
+                ID: budget.ID
+            });
+
+        return SELECT.one
+            .from(Budgets)
+            .where({
+                ID: budget.ID
+            });
+    };
+
+    const recalculateProjectsForTimesheet =
+        async (timesheetID) => {
+            const entries = await SELECT
+                .from(TimesheetEntries)
+                .where({
+                    timesheet_ID:
+                        timesheetID
+                });
+
+            if (!entries.length) {
+                return;
+            }
+
+            const taskIDs = [
+                ...new Set(
+                    entries
+                        .map(
+                            (entry) =>
+                                entry.task_ID
+                        )
+                        .filter(Boolean)
+                )
+            ];
+
+            const projectIDs = new Set();
+
+            for (const taskID of taskIDs) {
+                const task = await SELECT.one
+                    .from(Tasks)
+                    .where({
+                        ID: taskID
+                    });
+
+                if (
+                    !task ||
+                    !task.milestone_ID
+                ) {
+                    continue;
+                }
+
+                const milestone =
+                    await SELECT.one
+                        .from(Milestones)
+                        .where({
+                            ID:
+                                task.milestone_ID
+                        });
+
+                if (
+                    milestone &&
+                    milestone.project_ID
+                ) {
+                    projectIDs.add(
+                        milestone.project_ID
+                    );
+                }
+            }
+
+            for (const projectID of projectIDs) {
+                await recalculateProject(
+                    projectID
+                );
+            }
+        };
+
+    /* Departments */
+
+    this.on(
+        "createDepartment",
+        async (req) => {
+            const ID = cds.utils.uuid();
+
+            await INSERT.into(
+                Departments
+            ).entries({
+                ID,
+                departmentName:
+                    req.data.departmentName,
+                description:
+                    req.data.description
+            });
+
+            return SELECT.one
+                .from(Departments)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateDepartment",
+        async (req) => {
+            const {
+                ID,
                 departmentName,
                 description
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Departments).where({ ID });
-    });
+            await getOne(
+                req,
+                Departments,
+                { ID },
+                "Department not found"
+            );
 
-    this.on('deleteDepartment', async (req) => {
-        const { ID } = req.data;
+            await UPDATE(Departments)
+                .set(
+                    cleanData({
+                        departmentName,
+                        description
+                    })
+                )
+                .where({ ID });
 
-        await DELETE.from(Departments).where({ ID });
+            return SELECT.one
+                .from(Departments)
+                .where({ ID });
+        }
+    );
 
-        return 'Department deleted successfully';
-    });
+    this.on(
+        "deleteDepartment",
+        async (req) => {
+            const { ID } = req.data;
 
-    /* ==========================
-       EMPLOYEES
-       ========================== */
+            await getOne(
+                req,
+                Departments,
+                { ID },
+                "Department not found"
+            );
 
-    this.on('updateEmployee', async (req) => {
-        const {
-            ID,
-            firstName,
-            lastName,
-            email,
-            jobTitle,
-            hourlyRate,
-            status
-        } = req.data;
+            await DELETE
+                .from(Departments)
+                .where({ ID });
 
-        await UPDATE(Employees)
-            .set({
+            return "Department deleted successfully";
+        }
+    );
+
+    /* Employees */
+
+    this.on(
+        "createEmployee",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            if (data.departmentID) {
+                await getOne(
+                    req,
+                    Departments,
+                    {
+                        ID:
+                            data.departmentID
+                    },
+                    "Department not found"
+                );
+            }
+
+            await INSERT
+                .into(Employees)
+                .entries(
+                    cleanData({
+                        ID,
+                        firstName:
+                            data.firstName,
+                        lastName:
+                            data.lastName,
+                        email:
+                            data.email,
+                        jobTitle:
+                            data.jobTitle,
+                        joinDate:
+                            data.joinDate,
+                        hourlyRate:
+                            data.hourlyRate,
+                        status:
+                            data.status ||
+                            "Active",
+                        department_ID:
+                            data.departmentID
+                    })
+                );
+
+            return SELECT.one
+                .from(Employees)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateEmployee",
+        async (req) => {
+            const {
+                ID,
                 firstName,
                 lastName,
                 email,
                 jobTitle,
+                joinDate,
                 hourlyRate,
-                status
-            })
-            .where({ ID });
+                status,
+                departmentID
+            } = req.data;
 
-        return SELECT.one.from(Employees).where({ ID });
-    });
+            await getOne(
+                req,
+                Employees,
+                { ID },
+                "Employee not found"
+            );
 
-    this.on('deleteEmployee', async (req) => {
-        const { ID } = req.data;
+            if (departmentID) {
+                await getOne(
+                    req,
+                    Departments,
+                    {
+                        ID: departmentID
+                    },
+                    "Department not found"
+                );
+            }
 
-        await DELETE.from(Employees).where({ ID });
+            await UPDATE(Employees)
+                .set(
+                    cleanData({
+                        firstName,
+                        lastName,
+                        email,
+                        jobTitle,
+                        joinDate,
+                        hourlyRate,
+                        status,
+                        department_ID:
+                            departmentID
+                    })
+                )
+                .where({ ID });
 
-        return 'Employee deleted successfully';
-    });
+            return SELECT.one
+                .from(Employees)
+                .where({ ID });
+        }
+    );
 
-    /* ==========================
-       MANAGERS
-       ========================== */
+    this.on(
+        "deleteEmployee",
+        async (req) => {
+            const { ID } = req.data;
 
-    this.on('updateManager', async (req) => {
-        const { ID, managerLevel, status } = req.data;
+            await getOne(
+                req,
+                Employees,
+                { ID },
+                "Employee not found"
+            );
 
-        await UPDATE(Managers)
-            .set({
+            await DELETE
+                .from(Employees)
+                .where({ ID });
+
+            return "Employee deleted successfully";
+        }
+    );
+
+    /* Managers */
+
+    this.on(
+        "createManager",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await getOne(
+                req,
+                Employees,
+                {
+                    ID: data.employeeID
+                },
+                "Employee not found"
+            );
+
+            await getOne(
+                req,
+                Departments,
+                {
+                    ID: data.departmentID
+                },
+                "Department not found"
+            );
+
+            await INSERT
+                .into(Managers)
+                .entries({
+                    ID,
+                    employee_ID:
+                        data.employeeID,
+                    department_ID:
+                        data.departmentID,
+                    managerLevel:
+                        data.managerLevel,
+                    status:
+                        data.status ||
+                        "Active"
+                });
+
+            return SELECT.one
+                .from(Managers)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateManager",
+        async (req) => {
+            const {
+                ID,
                 managerLevel,
                 status
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Managers).where({ ID });
-    });
+            await getOne(
+                req,
+                Managers,
+                { ID },
+                "Manager not found"
+            );
 
-    this.on('deleteManager', async (req) => {
-        const { ID } = req.data;
+            await UPDATE(Managers)
+                .set(
+                    cleanData({
+                        managerLevel,
+                        status
+                    })
+                )
+                .where({ ID });
 
-        await DELETE.from(Managers).where({ ID });
+            return SELECT.one
+                .from(Managers)
+                .where({ ID });
+        }
+    );
 
-        return 'Manager deleted successfully';
-    });
+    this.on(
+        "deleteManager",
+        async (req) => {
+            const { ID } = req.data;
 
-    /* ==========================
-       CLIENTS
-       ========================== */
+            await getOne(
+                req,
+                Managers,
+                { ID },
+                "Manager not found"
+            );
 
-    this.on('updateClient', async (req) => {
-        const {
-            ID,
-            clientName,
-            contactPerson,
-            email,
-            phoneNumber,
-            country,
-            industry,
-            status
-        } = req.data;
+            await DELETE
+                .from(Managers)
+                .where({ ID });
 
-        await UPDATE(Clients)
-            .set({
+            return "Manager deleted successfully";
+        }
+    );
+
+    /* Clients */
+
+    this.on(
+        "createClient",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await INSERT
+                .into(Clients)
+                .entries({
+                    ID,
+                    clientName:
+                        data.clientName,
+                    contactPerson:
+                        data.contactPerson,
+                    email:
+                        data.email,
+                    phoneNumber:
+                        data.phoneNumber,
+                    country:
+                        data.country,
+                    industry:
+                        data.industry,
+                    status:
+                        data.status ||
+                        "Active"
+                });
+
+            return SELECT.one
+                .from(Clients)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateClient",
+        async (req) => {
+            const {
+                ID,
                 clientName,
                 contactPerson,
                 email,
@@ -498,451 +635,1503 @@ module.exports = cds.service.impl(async function () {
                 country,
                 industry,
                 status
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Clients).where({ ID });
-    });
+            await getOne(
+                req,
+                Clients,
+                { ID },
+                "Client not found"
+            );
 
-    this.on('deleteClient', async (req) => {
-        const { ID } = req.data;
+            await UPDATE(Clients)
+                .set(
+                    cleanData({
+                        clientName,
+                        contactPerson,
+                        email,
+                        phoneNumber,
+                        country,
+                        industry,
+                        status
+                    })
+                )
+                .where({ ID });
 
-        await DELETE.from(Clients).where({ ID });
+            return SELECT.one
+                .from(Clients)
+                .where({ ID });
+        }
+    );
 
-        return 'Client deleted successfully';
-    });
+    this.on(
+        "deleteClient",
+        async (req) => {
+            const { ID } = req.data;
 
-    /* ==========================
-       PROJECTS
-       ========================== */
+            await getOne(
+                req,
+                Clients,
+                { ID },
+                "Client not found"
+            );
 
-    this.on('updateProject', async (req) => {
-        const {
-            ID,
-            projectName,
-            status,
-            billingType,
-            startDate,
-            endDate,
-            plannedHours,
-            consumedHours
-        } = req.data;
+            await DELETE
+                .from(Clients)
+                .where({ ID });
 
-        await UPDATE(Projects)
-            .set({
+            return "Client deleted successfully";
+        }
+    );
+
+    /* Projects */
+
+    this.on(
+        "createProject",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            if (
+                data.startDate &&
+                data.endDate &&
+                data.endDate <
+                    data.startDate
+            ) {
+                req.reject(
+                    400,
+                    "Project end date cannot be before start date"
+                );
+            }
+
+            if (
+                Number(
+                    data.plannedHours || 0
+                ) < 0
+            ) {
+                req.reject(
+                    400,
+                    "Planned hours cannot be negative"
+                );
+            }
+
+            if (data.clientID) {
+                await getOne(
+                    req,
+                    Clients,
+                    {
+                        ID: data.clientID
+                    },
+                    "Client not found"
+                );
+            }
+
+            if (data.managerID) {
+                await getOne(
+                    req,
+                    Managers,
+                    {
+                        ID: data.managerID
+                    },
+                    "Manager not found"
+                );
+            }
+
+            await INSERT
+                .into(Projects)
+                .entries(
+                    cleanData({
+                        ID,
+                        projectCode:
+                            data.projectCode,
+                        projectName:
+                            data.projectName,
+                        status:
+                            data.status ||
+                            "Draft",
+                        billingType:
+                            data.billingType,
+                        startDate:
+                            data.startDate,
+                        endDate:
+                            data.endDate,
+                        plannedHours:
+                            data.plannedHours,
+                        consumedHours:
+                            data.consumedHours ??
+                            0,
+                        client_ID:
+                            data.clientID,
+                        manager_ID:
+                            data.managerID
+                    })
+                );
+
+            return SELECT.one
+                .from(Projects)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateProject",
+        async (req) => {
+            const {
+                ID,
+                projectCode,
                 projectName,
                 status,
                 billingType,
                 startDate,
                 endDate,
                 plannedHours,
-                consumedHours
-            })
-            .where({ ID });
+                consumedHours,
+                clientID,
+                managerID
+            } = req.data;
 
-        return SELECT.one.from(Projects).where({ ID });
-    });
+            await getOne(
+                req,
+                Projects,
+                { ID },
+                "Project not found"
+            );
 
-    this.on('deleteProject', async (req) => {
-        const { ID } = req.data;
+            if (
+                startDate &&
+                endDate &&
+                endDate < startDate
+            ) {
+                req.reject(
+                    400,
+                    "Project end date cannot be before start date"
+                );
+            }
 
-        await DELETE.from(Projects).where({ ID });
+            if (clientID) {
+                await getOne(
+                    req,
+                    Clients,
+                    {
+                        ID: clientID
+                    },
+                    "Client not found"
+                );
+            }
 
-        return 'Project deleted successfully';
-    });
+            if (managerID) {
+                await getOne(
+                    req,
+                    Managers,
+                    {
+                        ID: managerID
+                    },
+                    "Manager not found"
+                );
+            }
 
-    /* ==========================
-       BUDGETS
-       ========================== */
+            await UPDATE(Projects)
+                .set(
+                    cleanData({
+                        projectCode,
+                        projectName,
+                        status,
+                        billingType,
+                        startDate,
+                        endDate,
+                        plannedHours,
+                        consumedHours,
+                        client_ID:
+                            clientID,
+                        manager_ID:
+                            managerID
+                    })
+                )
+                .where({ ID });
 
-    this.on('updateBudget', async (req) => {
-        const {
-            ID,
-            budgetAmount,
-            consumedAmount,
-            remainingAmount,
-            billingRateHr,
-            budgetStatus
-        } = req.data;
+            return SELECT.one
+                .from(Projects)
+                .where({ ID });
+        }
+    );
 
-        await UPDATE(Budgets)
-            .set({
+    this.on(
+        "deleteProject",
+        async (req) => {
+            const { ID } = req.data;
+
+            await getOne(
+                req,
+                Projects,
+                { ID },
+                "Project not found"
+            );
+
+            await DELETE
+                .from(Projects)
+                .where({ ID });
+
+            return "Project deleted successfully";
+        }
+    );
+
+    /* Budgets */
+
+    this.on(
+        "createBudget",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await getOne(
+                req,
+                Projects,
+                {
+                    ID: data.projectID
+                },
+                "Project not found"
+            );
+
+            const existing =
+                await SELECT.one
+                    .from(Budgets)
+                    .where({
+                        project_ID:
+                            data.projectID
+                    });
+
+            if (existing) {
+                req.reject(
+                    409,
+                    "A budget already exists for this project"
+                );
+            }
+
+            const budgetAmount = Number(
+                data.budgetAmount || 0
+            );
+
+            const consumedAmount = Number(
+                data.consumedAmount || 0
+            );
+
+            if (budgetAmount <= 0) {
+                req.reject(
+                    400,
+                    "Budget amount must be greater than zero"
+                );
+            }
+
+            const remainingAmount =
+                data.remainingAmount !==
+                undefined
+                    ? Number(
+                        data.remainingAmount
+                    )
+                    : budgetAmount -
+                      consumedAmount;
+
+            await INSERT
+                .into(Budgets)
+                .entries({
+                    ID,
+                    project_ID:
+                        data.projectID,
+                    budgetAmount,
+                    consumedAmount,
+                    remainingAmount,
+                    billingRateHr:
+                        Number(
+                            data.billingRateHr ||
+                            0
+                        ),
+                    currencyCode:
+                        data.currencyCode,
+                    budgetStatus:
+                        data.budgetStatus ||
+                        budgetStatusFor(
+                            consumedAmount,
+                            budgetAmount
+                        )
+                });
+
+            return SELECT.one
+                .from(Budgets)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateBudget",
+        async (req) => {
+            const {
+                ID,
                 budgetAmount,
                 consumedAmount,
                 remainingAmount,
                 billingRateHr,
                 budgetStatus
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Budgets).where({ ID });
-    });
+            await getOne(
+                req,
+                Budgets,
+                { ID },
+                "Budget not found"
+            );
 
-    this.on('deleteBudget', async (req) => {
-        const { ID } = req.data;
+            if (
+                budgetAmount !== undefined &&
+                Number(budgetAmount) <= 0
+            ) {
+                req.reject(
+                    400,
+                    "Budget amount must be greater than zero"
+                );
+            }
 
-        await DELETE.from(Budgets).where({ ID });
+            await UPDATE(Budgets)
+                .set(
+                    cleanData({
+                        budgetAmount,
+                        consumedAmount,
+                        remainingAmount,
+                        billingRateHr,
+                        budgetStatus
+                    })
+                )
+                .where({ ID });
 
-        return 'Budget deleted successfully';
-    });
+            return SELECT.one
+                .from(Budgets)
+                .where({ ID });
+        }
+    );
 
-    this.on('recalculateBudget', async (req) => {
+    this.on(
+        "deleteBudget",
+        async (req) => {
+            const { ID } = req.data;
 
-    const projectID = req.params[0].ID;
+            await getOne(
+                req,
+                Budgets,
+                { ID },
+                "Budget not found"
+            );
 
-    const project = await SELECT.one
-        .from(Projects)
-        .where({
-            ID: projectID
-        });
+            await DELETE
+                .from(Budgets)
+                .where({ ID });
 
-    if (!project) {
-        return req.reject(
-            404,
-            'Project not found'
-        );
-    }
+            return "Budget deleted successfully";
+        }
+    );
 
-    const budget = await SELECT.one
-        .from(Budgets)
-        .where({
-            project_ID: projectID
-        });
+    this.on(
+        "recalculateBudget",
+        "Projects",
+        async (req) => {
+            const projectID =
+                boundID(req);
 
-    if (!budget) {
-        return req.reject(
-            404,
-            'Budget not found'
-        );
-    }
+            await getOne(
+                req,
+                Projects,
+                {
+                    ID: projectID
+                },
+                "Project not found"
+            );
 
-    const consumedAmount =
-        Number(project.consumedHours || 0) *
-        Number(budget.billingRateHr || 0);
+            const budget =
+                await recalculateProject(
+                    projectID
+                );
 
-    const remainingAmount =
-        Number(budget.budgetAmount || 0) -
-        consumedAmount;
+            if (!budget) {
+                req.reject(
+                    404,
+                    "Budget not found"
+                );
+            }
 
-    let budgetStatus = 'WithinBudget';
+            return budget;
+        }
+    );
 
-    const burnPercentage =
-        (
-            consumedAmount /
-            Number(budget.budgetAmount || 1)
-        ) * 100;
+    /* Milestones */
 
-    if (burnPercentage >= 100) {
+    this.on(
+        "createMilestone",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
 
-        budgetStatus = 'Breached';
+            const project =
+                await getOne(
+                    req,
+                    Projects,
+                    {
+                        ID: data.projectID
+                    },
+                    "Project not found"
+                );
 
-    } else if (burnPercentage >= 80) {
+            if (
+                data.startDate &&
+                project.startDate &&
+                data.startDate <
+                    project.startDate
+            ) {
+                req.reject(
+                    400,
+                    "Milestone start date cannot be before project start date"
+                );
+            }
 
-        budgetStatus = 'AtRisk';
-    }
+            if (
+                data.endDate &&
+                project.endDate &&
+                data.endDate >
+                    project.endDate
+            ) {
+                req.reject(
+                    400,
+                    "Milestone end date cannot be after project end date"
+                );
+            }
 
-    await UPDATE(Budgets)
-        .set({
-            consumedAmount,
-            remainingAmount,
-            budgetStatus
-        })
-        .where({
-            ID: budget.ID
-        });
+            await INSERT
+                .into(Milestones)
+                .entries({
+                    ID,
+                    project_ID:
+                        data.projectID,
+                    milestoneName:
+                        data.milestoneName,
+                    startDate:
+                        data.startDate,
+                    endDate:
+                        data.endDate,
+                    completionPercent:
+                        data.completionPercent ??
+                        0,
+                    status:
+                        data.status ||
+                        "NotStarted"
+                });
 
-    return await SELECT.one
-        .from(Budgets)
-        .where({
-            ID: budget.ID
-        });
-});
-    /* ==========================
-       MILESTONES
-       ========================== */
+            return SELECT.one
+                .from(Milestones)
+                .where({ ID });
+        }
+    );
 
-    this.on('updateMilestone', async (req) => {
-        const {
-            ID,
-            milestoneName,
-            startDate,
-            endDate,
-            completionPercent,
-            status
-        } = req.data;
-
-        await UPDATE(Milestones)
-            .set({
+    this.on(
+        "updateMilestone",
+        async (req) => {
+            const {
+                ID,
                 milestoneName,
                 startDate,
                 endDate,
                 completionPercent,
                 status
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Milestones).where({ ID });
-    });
+            await getOne(
+                req,
+                Milestones,
+                { ID },
+                "Milestone not found"
+            );
 
-    this.on('deleteMilestone', async (req) => {
-        const { ID } = req.data;
+            if (
+                completionPercent !==
+                    undefined &&
+                (
+                    Number(
+                        completionPercent
+                    ) < 0 ||
+                    Number(
+                        completionPercent
+                    ) > 100
+                )
+            ) {
+                req.reject(
+                    400,
+                    "Completion percentage must be between 0 and 100"
+                );
+            }
 
-        await DELETE.from(Milestones).where({ ID });
+            await UPDATE(Milestones)
+                .set(
+                    cleanData({
+                        milestoneName,
+                        startDate,
+                        endDate,
+                        completionPercent,
+                        status
+                    })
+                )
+                .where({ ID });
 
-        return 'Milestone deleted successfully';
-    });
+            return SELECT.one
+                .from(Milestones)
+                .where({ ID });
+        }
+    );
 
-    /* ==========================
-       TASKS
-       ========================== */
+    this.on(
+        "deleteMilestone",
+        async (req) => {
+            const { ID } = req.data;
 
-    this.on('updateTask', async (req) => {
-        const {
-            ID,
-            taskName,
-            startDate,
-            endDate,
-            status,
-            estimatedHours,
-            actualHours
-        } = req.data;
+            await getOne(
+                req,
+                Milestones,
+                { ID },
+                "Milestone not found"
+            );
 
-        await UPDATE(Tasks)
-            .set({
+            await DELETE
+                .from(Milestones)
+                .where({ ID });
+
+            return "Milestone deleted successfully";
+        }
+    );
+
+    /* Tasks */
+
+    this.on(
+        "createTask",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await getOne(
+                req,
+                Milestones,
+                {
+                    ID: data.milestoneID
+                },
+                "Milestone not found"
+            );
+
+            if (
+                Number(
+                    data.estimatedHours ||
+                    0
+                ) <= 0
+            ) {
+                req.reject(
+                    400,
+                    "Estimated hours must be greater than zero"
+                );
+            }
+
+            await INSERT
+                .into(Tasks)
+                .entries({
+                    ID,
+                    milestone_ID:
+                        data.milestoneID,
+                    taskName:
+                        data.taskName,
+                    startDate:
+                        data.startDate,
+                    endDate:
+                        data.endDate,
+                    status:
+                        data.status ||
+                        "NotStarted",
+                    estimatedHours:
+                        data.estimatedHours,
+                    actualHours:
+                        data.actualHours ??
+                        0
+                });
+
+            return SELECT.one
+                .from(Tasks)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateTask",
+        async (req) => {
+            const {
+                ID,
                 taskName,
                 startDate,
                 endDate,
                 status,
                 estimatedHours,
                 actualHours
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Tasks).where({ ID });
-    });
+            await getOne(
+                req,
+                Tasks,
+                { ID },
+                "Task not found"
+            );
 
-    this.on('deleteTask', async (req) => {
-        const { ID } = req.data;
+            await UPDATE(Tasks)
+                .set(
+                    cleanData({
+                        taskName,
+                        startDate,
+                        endDate,
+                        status,
+                        estimatedHours,
+                        actualHours
+                    })
+                )
+                .where({ ID });
 
-        await DELETE.from(Tasks).where({ ID });
+            return SELECT.one
+                .from(Tasks)
+                .where({ ID });
+        }
+    );
 
-        return 'Task deleted successfully';
-    });
+    this.on(
+        "deleteTask",
+        async (req) => {
+            const { ID } = req.data;
 
-    /* ==========================
-       TIMESHEETS
-       ========================== */
+            await getOne(
+                req,
+                Tasks,
+                { ID },
+                "Task not found"
+            );
 
-    this.on('updateTimesheet', async (req) => {
-        const {
-            ID,
-            approvedByID,
-            invoiceID,
-            totalBillableHours,
-            submittedDate,
-            approvedDate,
-            status
-        } = req.data;
+            await DELETE
+                .from(Tasks)
+                .where({ ID });
 
-        await UPDATE(Timesheets)
-            .set({
+            return "Task deleted successfully";
+        }
+    );
+
+    /* Timesheets */
+
+    this.on(
+        "createTimesheet",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await getOne(
+                req,
+                Employees,
+                {
+                    ID: data.employeeID
+                },
+                "Employee not found"
+            );
+
+            if (
+                data.weekStartDate &&
+                data.weekEndDate &&
+                data.weekEndDate <
+                    data.weekStartDate
+            ) {
+                req.reject(
+                    400,
+                    "Week end date cannot be before week start date"
+                );
+            }
+
+            await INSERT
+                .into(Timesheets)
+                .entries(
+                    cleanData({
+                        ID,
+                        employee_ID:
+                            data.employeeID,
+                        approvedBy_ID:
+                            data.approvedByID,
+                        invoice_ID:
+                            data.invoiceID,
+                        weekStartDate:
+                            data.weekStartDate,
+                        weekEndDate:
+                            data.weekEndDate,
+                        totalBillableHours:
+                            data.totalBillableHours ??
+                            0,
+                        submittedDate:
+                            data.submittedDate,
+                        approvedDate:
+                            data.approvedDate,
+                        status:
+                            data.status ||
+                            "Draft"
+                    })
+                );
+
+            return SELECT.one
+                .from(Timesheets)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateTimesheet",
+        async (req) => {
+            const {
+                ID,
                 approvedByID,
                 invoiceID,
+                weekStartDate,
+                weekEndDate,
                 totalBillableHours,
                 submittedDate,
                 approvedDate,
                 status
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(Timesheets).where({ ID });
-    });
+            const current =
+                await getOne(
+                    req,
+                    Timesheets,
+                    { ID },
+                    "Timesheet not found"
+                );
 
-    this.on('deleteTimesheet', async (req) => {
-        const { ID } = req.data;
+            if (
+                [
+                    "Submitted",
+                    "Approved",
+                    "Invoiced"
+                ].includes(current.status)
+            ) {
+                req.reject(
+                    400,
+                    "Submitted, approved, or invoiced Timesheets cannot be edited"
+                );
+            }
 
-        await DELETE.from(Timesheets).where({ ID });
+            if (
+                weekStartDate &&
+                weekEndDate &&
+                weekEndDate <
+                    weekStartDate
+            ) {
+                req.reject(
+                    400,
+                    "Week end date cannot be before week start date"
+                );
+            }
 
-        return 'Timesheet deleted successfully';
-    });
-    this.on('submitTimesheet', async (req) => {
+            await UPDATE(Timesheets)
+                .set(
+                    cleanData({
+                        approvedBy_ID:
+                            approvedByID,
+                        invoice_ID:
+                            invoiceID,
+                        weekStartDate,
+                        weekEndDate,
+                        totalBillableHours,
+                        submittedDate,
+                        approvedDate,
+                        status
+                    })
+                )
+                .where({ ID });
 
-    const ID = req.params[0].ID;
-
-    const timesheet = await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
-
-    if (!timesheet) {
-        return req.reject(
-            404,
-            'Timesheet not found'
-        );
-    }
-
-    const entries = await SELECT
-        .from(TimesheetEntries)
-        .where({
-            timesheet_ID: ID
-        });
-
-    if (!entries.length) {
-        return req.reject(
-            400,
-            'No entries found'
-        );
-    }
-
-    const dailyTotals = {};
-
-    for (const entry of entries) {
-
-        const date = String(entry.workDate);
-
-        dailyTotals[date] =
-            (dailyTotals[date] || 0) +
-            Number(entry.hours);
-
-        if (dailyTotals[date] > 24) {
-
-            return req.reject(
-                400,
-                `Daily hours exceed 24 on ${date}`
-            );
+            return SELECT.one
+                .from(Timesheets)
+                .where({ ID });
         }
-    }
+    );
 
-    await UPDATE(Timesheets)
-        .set({
-            status: 'Submitted',
-            submittedDate: new Date()
-        })
-        .where({ ID });
+    this.on(
+        "deleteTimesheet",
+        async (req) => {
+            const { ID } = req.data;
 
-    return await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
-    });
+            const current =
+                await getOne(
+                    req,
+                    Timesheets,
+                    { ID },
+                    "Timesheet not found"
+                );
 
-    this.on('approveTimesheet', async (req) => {
+            if (
+                current.status !==
+                    "Draft" &&
+                current.status !==
+                    "Rejected"
+            ) {
+                req.reject(
+                    400,
+                    "Only draft or rejected Timesheets can be deleted"
+                );
+            }
 
-    const ID = req.params[0].ID;
+            await DELETE
+                .from(TimesheetEntries)
+                .where({
+                    timesheet_ID: ID
+                });
 
-    const timesheet = await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
+            await DELETE
+                .from(Timesheets)
+                .where({ ID });
 
-    if (!timesheet) {
-        return req.reject(
-            404,
-            'Timesheet not found'
-        );
-    }
+            return "Timesheet deleted successfully";
+        }
+    );
 
-    await UPDATE(Timesheets)
-        .set({
-            status: 'Approved',
-            approvedDate: new Date()
-        })
-        .where({ ID });
+    this.on(
+        "submitTimesheet",
+        "Timesheets",
+        async (req) => {
+            const ID = boundID(req);
 
-    return await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
-});
-this.on('rejectTimesheet', async (req) => {
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    { ID },
+                    "Timesheet not found"
+                );
 
-    const ID = req.params[0].ID;
+            if (
+                ![
+                    "Draft",
+                    "Rejected"
+                ].includes(
+                    timesheet.status
+                )
+            ) {
+                req.reject(
+                    400,
+                    "Only draft or rejected Timesheets can be submitted"
+                );
+            }
 
-    const { reason } = req.data;
+            const entries =
+                await SELECT
+                    .from(
+                        TimesheetEntries
+                    )
+                    .where({
+                        timesheet_ID: ID
+                    });
 
-    const timesheet = await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
+            if (!entries.length) {
+                req.reject(
+                    400,
+                    "No Timesheet Entries were found"
+                );
+            }
 
-    if (!timesheet) {
-        return req.reject(
-            404,
-            'Timesheet not found'
-        );
-    }
+            const dailyTotals = {};
 
-    if (!reason) {
-        return req.reject(
-            400,
-            'Rejection reason is mandatory'
-        );
-    }
+            for (const entry of entries) {
+                const workDate =
+                    String(entry.workDate);
 
-    if (timesheet.status !== 'Submitted') {
-        return req.reject(
-            400,
-            'Only submitted timesheets can be rejected'
-        );
-    }
+                const hours =
+                    Number(
+                        entry.hours || 0
+                    );
 
-    await UPDATE(Timesheets)
-        .set({
-            status: 'Rejected',
-            rejectionReason: reason
-        })
-        .where({ ID });
+                if (
+                    hours < 0.25 ||
+                    hours > 24
+                ) {
+                    req.reject(
+                        400,
+                        `Hours must be between 0.25 and 24 on ${workDate}`
+                    );
+                }
 
-    return await SELECT.one
-        .from(Timesheets)
-        .where({ ID });
-});
+                dailyTotals[workDate] =
+                    (
+                        dailyTotals[
+                            workDate
+                        ] || 0
+                    ) +
+                    hours;
 
+                if (
+                    dailyTotals[
+                        workDate
+                    ] > 24
+                ) {
+                    req.reject(
+                        400,
+                        `Daily hours exceed 24 on ${workDate}`
+                    );
+                }
+            }
 
-    /* ==========================
-       TIMESHEET ENTRIES
-       ========================== */
+            const totalBillableHours =
+                entries
+                    .filter(
+                        (entry) =>
+                            entry.billable ===
+                            true
+                    )
+                    .reduce(
+                        (
+                            total,
+                            entry
+                        ) =>
+                            total +
+                            Number(
+                                entry.hours ||
+                                0
+                            ),
+                        0
+                    );
 
-    this.on('updateTimesheetEntry', async (req) => {
-        const {
-            ID,
-            workDate,
-            hours,
-            billable
-        } = req.data;
+            await UPDATE(Timesheets)
+                .set({
+                    status:
+                        "Submitted",
+                    submittedDate:
+                        dateOnly(),
+                    approvedDate:
+                        null,
+                    rejectionReason:
+                        null,
+                    totalBillableHours:
+                        Number(
+                            totalBillableHours
+                                .toFixed(2)
+                        )
+                })
+                .where({ ID });
 
-        await UPDATE(TimesheetEntries)
-            .set({
+            return SELECT.one
+                .from(Timesheets)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "approveTimesheet",
+        "Timesheets",
+        async (req) => {
+            const ID = boundID(req);
+
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    { ID },
+                    "Timesheet not found"
+                );
+
+            if (
+                timesheet.status !==
+                "Submitted"
+            ) {
+                req.reject(
+                    400,
+                    "Only submitted Timesheets can be approved"
+                );
+            }
+
+            const entries =
+                await SELECT
+                    .from(
+                        TimesheetEntries
+                    )
+                    .where({
+                        timesheet_ID: ID
+                    });
+
+            if (!entries.length) {
+                req.reject(
+                    400,
+                    "The Timesheet has no entries"
+                );
+            }
+
+            const totalBillableHours =
+                entries
+                    .filter(
+                        (entry) =>
+                            entry.billable ===
+                            true
+                    )
+                    .reduce(
+                        (
+                            total,
+                            entry
+                        ) =>
+                            total +
+                            Number(
+                                entry.hours ||
+                                0
+                            ),
+                        0
+                    );
+
+            await UPDATE(Timesheets)
+                .set({
+                    status:
+                        "Approved",
+                    approvedDate:
+                        dateOnly(),
+                    totalBillableHours:
+                        Number(
+                            totalBillableHours
+                                .toFixed(2)
+                        ),
+                    rejectionReason:
+                        null
+                })
+                .where({ ID });
+
+            await recalculateProjectsForTimesheet(
+                ID
+            );
+
+            return SELECT.one
+                .from(Timesheets)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "rejectTimesheet",
+        "Timesheets",
+        async (req) => {
+            const ID = boundID(req);
+
+            const reason = String(
+                req.data.reason || ""
+            ).trim();
+
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    { ID },
+                    "Timesheet not found"
+                );
+
+            if (
+                timesheet.status !==
+                "Submitted"
+            ) {
+                req.reject(
+                    400,
+                    "Only submitted Timesheets can be rejected"
+                );
+            }
+
+            if (!reason) {
+                req.reject(
+                    400,
+                    "Rejection reason is mandatory"
+                );
+            }
+
+            await UPDATE(Timesheets)
+                .set({
+                    status:
+                        "Rejected",
+                    rejectionReason:
+                        reason,
+                    approvedDate:
+                        null
+                })
+                .where({ ID });
+
+            await recalculateProjectsForTimesheet(
+                ID
+            );
+
+            return SELECT.one
+                .from(Timesheets)
+                .where({ ID });
+        }
+    );
+
+    /* Timesheet Entries */
+
+    this.on(
+        "createTimesheetEntry",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    {
+                        ID:
+                            data.timesheetID
+                    },
+                    "Timesheet not found"
+                );
+
+            if (
+                timesheet.status !==
+                    "Draft" &&
+                timesheet.status !==
+                    "Rejected"
+            ) {
+                req.reject(
+                    400,
+                    "Entries can only be added to draft or rejected Timesheets"
+                );
+            }
+
+            const task =
+                await getOne(
+                    req,
+                    Tasks,
+                    {
+                        ID: data.taskID
+                    },
+                    "Task not found"
+                );
+
+            if (
+                [
+                    "Done",
+                    "Completed"
+                ].includes(task.status)
+            ) {
+                req.reject(
+                    400,
+                    "Time cannot be logged against a completed Task"
+                );
+            }
+
+            const hours = Number(
+                data.hours || 0
+            );
+
+            if (
+                hours < 0.25 ||
+                hours > 24
+            ) {
+                req.reject(
+                    400,
+                    "Hours must be between 0.25 and 24"
+                );
+            }
+
+            if (
+                data.workDate <
+                    timesheet.weekStartDate ||
+                data.workDate >
+                    timesheet.weekEndDate
+            ) {
+                req.reject(
+                    400,
+                    "Work date must be inside the Timesheet week"
+                );
+            }
+
+            const duplicate =
+                await SELECT.one
+                    .from(
+                        TimesheetEntries
+                    )
+                    .where({
+                        timesheet_ID:
+                            data.timesheetID,
+                        task_ID:
+                            data.taskID,
+                        workDate:
+                            data.workDate
+                    });
+
+            if (duplicate) {
+                req.reject(
+                    409,
+                    "An Entry already exists for this Task and work date"
+                );
+            }
+
+            const dailyEntries =
+                await SELECT
+                    .from(
+                        TimesheetEntries
+                    )
+                    .where({
+                        timesheet_ID:
+                            data.timesheetID,
+                        workDate:
+                            data.workDate
+                    });
+
+            const currentDailyHours =
+                dailyEntries.reduce(
+                    (
+                        total,
+                        entry
+                    ) =>
+                        total +
+                        Number(
+                            entry.hours ||
+                            0
+                        ),
+                    0
+                );
+
+            if (
+                currentDailyHours +
+                hours >
+                24
+            ) {
+                req.reject(
+                    400,
+                    "Daily hours cannot exceed 24"
+                );
+            }
+
+            await INSERT
+                .into(
+                    TimesheetEntries
+                )
+                .entries({
+                    ID,
+                    timesheet_ID:
+                        data.timesheetID,
+                    task_ID:
+                        data.taskID,
+                    workDate:
+                        data.workDate,
+                    hours,
+                    billable:
+                        data.billable !==
+                        false
+                });
+
+            return SELECT.one
+                .from(
+                    TimesheetEntries
+                )
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateTimesheetEntry",
+        async (req) => {
+            const {
+                ID,
                 workDate,
                 hours,
                 billable
-            })
-            .where({ ID });
+            } = req.data;
 
-        return SELECT.one.from(TimesheetEntries).where({ ID });
-    });
+            const entry =
+                await getOne(
+                    req,
+                    TimesheetEntries,
+                    { ID },
+                    "Timesheet Entry not found"
+                );
 
-    this.on('deleteTimesheetEntry', async (req) => {
-        const { ID } = req.data;
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    {
+                        ID:
+                            entry.timesheet_ID
+                    },
+                    "Parent Timesheet not found"
+                );
 
-        await DELETE.from(TimesheetEntries).where({ ID });
+            if (
+                timesheet.status !==
+                    "Draft" &&
+                timesheet.status !==
+                    "Rejected"
+            ) {
+                req.reject(
+                    400,
+                    "Entries can only be changed while the Timesheet is Draft or Rejected"
+                );
+            }
 
-        return 'Timesheet Entry deleted successfully';
-    });
+            if (
+                hours !== undefined &&
+                (
+                    Number(hours) <
+                        0.25 ||
+                    Number(hours) >
+                        24
+                )
+            ) {
+                req.reject(
+                    400,
+                    "Hours must be between 0.25 and 24"
+                );
+            }
 
-    /* ==========================
-       INVOICES
-       ========================== */
+            if (
+                workDate &&
+                (
+                    workDate <
+                        timesheet
+                            .weekStartDate ||
+                    workDate >
+                        timesheet
+                            .weekEndDate
+                )
+            ) {
+                req.reject(
+                    400,
+                    "Work date must be inside the Timesheet week"
+                );
+            }
 
-    this.on('updateInvoice', async (req) => {
-        const {
-            ID,
-            invoiceDate,
-            dueDate,
-            billableHours,
-            totalAmount,
-            taxAmount,
-            paymentStatus,
-            status
-        } = req.data;
+            await UPDATE(
+                TimesheetEntries
+            )
+                .set(
+                    cleanData({
+                        workDate,
+                        hours,
+                        billable
+                    })
+                )
+                .where({ ID });
 
-        await UPDATE(Invoices)
-            .set({
+            return SELECT.one
+                .from(
+                    TimesheetEntries
+                )
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "deleteTimesheetEntry",
+        async (req) => {
+            const { ID } = req.data;
+
+            const entry =
+                await getOne(
+                    req,
+                    TimesheetEntries,
+                    { ID },
+                    "Timesheet Entry not found"
+                );
+
+            const timesheet =
+                await getOne(
+                    req,
+                    Timesheets,
+                    {
+                        ID:
+                            entry.timesheet_ID
+                    },
+                    "Parent Timesheet not found"
+                );
+
+            if (
+                timesheet.status !==
+                    "Draft" &&
+                timesheet.status !==
+                    "Rejected"
+            ) {
+                req.reject(
+                    400,
+                    "Entries can only be deleted while the Timesheet is Draft or Rejected"
+                );
+            }
+
+            await DELETE
+                .from(
+                    TimesheetEntries
+                )
+                .where({ ID });
+
+            return "Timesheet Entry deleted successfully";
+        }
+    );
+
+    /* Invoices */
+
+    this.on(
+        "createInvoice",
+        async (req) => {
+            const data = req.data;
+            const ID = cds.utils.uuid();
+
+            await getOne(
+                req,
+                Projects,
+                {
+                    ID: data.projectID
+                },
+                "Project not found"
+            );
+
+            await getOne(
+                req,
+                Clients,
+                {
+                    ID: data.clientID
+                },
+                "Client not found"
+            );
+
+            await INSERT
+                .into(Invoices)
+                .entries({
+                    ID,
+                    invoiceNumber:
+                        data.invoiceNumber,
+                    project_ID:
+                        data.projectID,
+                    client_ID:
+                        data.clientID,
+                    invoiceDate:
+                        data.invoiceDate,
+                    dueDate:
+                        data.dueDate,
+                    billableHours:
+                        data.billableHours,
+                    totalAmount:
+                        data.totalAmount,
+                    taxAmount:
+                        data.taxAmount,
+                    currencyCode:
+                        data.currencyCode,
+                    paymentStatus:
+                        data.paymentStatus ||
+                        "Draft",
+                    status:
+                        data.status ||
+                        "Draft"
+                });
+
+            return SELECT.one
+                .from(Invoices)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "updateInvoice",
+        async (req) => {
+            const {
+                ID,
                 invoiceDate,
                 dueDate,
                 billableHours,
@@ -950,234 +2139,441 @@ this.on('rejectTimesheet', async (req) => {
                 taxAmount,
                 paymentStatus,
                 status
+            } = req.data;
+
+            await getOne(
+                req,
+                Invoices,
+                { ID },
+                "Invoice not found"
+            );
+
+            await UPDATE(Invoices)
+                .set(
+                    cleanData({
+                        invoiceDate,
+                        dueDate,
+                        billableHours,
+                        totalAmount,
+                        taxAmount,
+                        paymentStatus,
+                        status
+                    })
+                )
+                .where({ ID });
+
+            return SELECT.one
+                .from(Invoices)
+                .where({ ID });
+        }
+    );
+
+    this.on(
+        "deleteInvoice",
+        async (req) => {
+            const { ID } = req.data;
+
+            const invoice =
+                await getOne(
+                    req,
+                    Invoices,
+                    { ID },
+                    "Invoice not found"
+                );
+
+            if (
+                invoice.status !==
+                    "Draft" ||
+                invoice.paymentStatus !==
+                    "Draft"
+            ) {
+                req.reject(
+                    400,
+                    "Only draft Invoices can be deleted"
+                );
+            }
+
+            await DELETE
+                .from(Invoices)
+                .where({ ID });
+
+            return "Invoice deleted successfully";
+        }
+    );
+
+    this.on(
+        "generateInvoice",
+        "Projects",
+        async (req) => {
+            const projectID =
+                boundID(req);
+
+            const project =
+                await getOne(
+                    req,
+                    Projects,
+                    {
+                        ID: projectID
+                    },
+                    "Project not found"
+                );
+
+            const budget =
+                await getOne(
+                    req,
+                    Budgets,
+                    {
+                        project_ID:
+                            projectID
+                    },
+                    "Budget not found"
+                );
+
+            if (!project.client_ID) {
+                req.reject(
+                    400,
+                    "The Project has no Client"
+                );
+            }
+
+            const milestones =
+                await SELECT
+                    .from(Milestones)
+                    .where({
+                        project_ID:
+                            projectID
+                    });
+
+            const taskIDs = new Set();
+
+            for (const milestone of milestones) {
+                const tasks =
+                    await SELECT
+                        .from(Tasks)
+                        .where({
+                            milestone_ID:
+                                milestone.ID
+                        });
+
+                tasks.forEach(
+                    (task) =>
+                        taskIDs.add(
+                            task.ID
+                        )
+                );
+            }
+
+            const approvedTimesheets =
+                await SELECT
+                    .from(Timesheets)
+                    .where({
+                        status:
+                            "Approved",
+                        invoice_ID:
+                            null
+                    });
+
+            const includedTimesheets = [];
+            let billableHours = 0;
+
+            for (
+                const timesheet
+                of approvedTimesheets
+            ) {
+                const entries =
+                    await SELECT
+                        .from(
+                            TimesheetEntries
+                        )
+                        .where({
+                            timesheet_ID:
+                                timesheet.ID
+                        });
+
+                const matchingEntries =
+                    entries.filter(
+                        (entry) =>
+                            entry.billable ===
+                                true &&
+                            taskIDs.has(
+                                entry.task_ID
+                            )
+                    );
+
+                if (
+                    matchingEntries.length
+                ) {
+                    includedTimesheets.push(
+                        timesheet
+                    );
+
+                    billableHours +=
+                        matchingEntries.reduce(
+                            (
+                                total,
+                                entry
+                            ) =>
+                                total +
+                                Number(
+                                    entry.hours ||
+                                    0
+                                ),
+                            0
+                        );
+                }
+            }
+
+            if (
+                !includedTimesheets.length ||
+                billableHours <= 0
+            ) {
+                req.reject(
+                    400,
+                    "No approved un-invoiced billable hours were found for this Project"
+                );
+            }
+
+            billableHours = Number(
+                billableHours.toFixed(2)
+            );
+
+            const totalAmount = Number(
+                (
+                    billableHours *
+                    Number(
+                        budget.billingRateHr ||
+                        0
+                    )
+                ).toFixed(2)
+            );
+
+            const taxAmount = Number(
+                (
+                    totalAmount * 0.18
+                ).toFixed(2)
+            );
+
+            const invoiceID =
+                cds.utils.uuid();
+
+            const invoiceDate =
+                new Date();
+
+            const dueDate =
+                new Date(invoiceDate);
+
+            dueDate.setDate(
+                dueDate.getDate() + 30
+            );
+
+            await INSERT
+                .into(Invoices)
+                .entries({
+                    ID:
+                        invoiceID,
+                    invoiceNumber:
+                        `INV-${Date.now()}`,
+                    project_ID:
+                        projectID,
+                    client_ID:
+                        project.client_ID,
+                    invoiceDate:
+                        dateOnly(invoiceDate),
+                    dueDate:
+                        dateOnly(dueDate),
+                    billableHours,
+                    totalAmount,
+                    taxAmount,
+                    currencyCode:
+                        budget.currencyCode,
+                    paymentStatus:
+                        "Draft",
+                    status:
+                        "Draft"
+                });
+
+            for (
+                const timesheet
+                of includedTimesheets
+            ) {
+                await UPDATE(
+                    Timesheets
+                )
+                    .set({
+                        invoice_ID:
+                            invoiceID,
+                        status:
+                            "Invoiced"
+                    })
+                    .where({
+                        ID:
+                            timesheet.ID
+                    });
+            }
+
+            await recalculateProject(
+                projectID
+            );
+
+            return SELECT.one
+                .from(Invoices)
+                .where({
+                    ID: invoiceID
+                });
+        }
+    );
+
+    this.on(
+    "issue",
+    "Invoices",
+    async (req) => {
+        const ID = boundID(req);
+
+        const invoice =
+            await getOne(
+                req,
+                Invoices,
+                { ID },
+                "Invoice not found"
+            );
+
+        if (
+            invoice.status !== "Draft" ||
+            invoice.paymentStatus !== "Draft"
+        ) {
+            req.reject(
+                400,
+                "Only Draft Invoices can be issued"
+            );
+        }
+
+        await UPDATE(Invoices)
+            .set({
+                paymentStatus: "Issued",
+                status: "Sent"
             })
             .where({ ID });
 
-        return SELECT.one.from(Invoices).where({ ID });
-    });
-
-    this.on('deleteInvoice', async (req) => {
-        const { ID } = req.data;
-
-        await DELETE.from(Invoices).where({ ID });
-
-        return 'Invoice deleted successfully';
-    });
-
-    this.on('generateInvoice', async (req) => {
-
-    const projectID = req.params[0].ID;
-
-    const project = await SELECT.one
-        .from(Projects)
-        .where({ ID: projectID });
-
-    if (!project) {
-        return req.reject(
-            404,
-            'Project not found'
-        );
+        return SELECT.one
+            .from(Invoices)
+            .where({ ID });
     }
+);
 
-    const budget = await SELECT.one
-        .from(Budgets)
-        .where({
-            project_ID: projectID
-        });
+this.on(
+    "markPaid",
+    "Invoices",
+    async (req) => {
+        const ID = boundID(req);
 
-    if (!budget) {
-        return req.reject(
-            404,
-            'Budget not found'
-        );
+        const invoice =
+            await getOne(
+                req,
+                Invoices,
+                { ID },
+                "Invoice not found"
+            );
+
+        /*
+         * Supports both:
+         * New records: status = Sent, paymentStatus = Issued
+         * Old records: status = Issued, paymentStatus = Issued
+         */
+        const isIssued =
+            invoice.paymentStatus === "Issued" ||
+            invoice.status === "Issued" ||
+            invoice.status === "Sent";
+
+        if (!isIssued) {
+            req.reject(
+                400,
+                "Only an issued Invoice can be marked as paid"
+            );
+        }
+
+        await UPDATE(Invoices)
+            .set({
+                paymentStatus: "Paid",
+                status: "Paid"
+            })
+            .where({
+                ID
+            });
+
+        return SELECT.one
+            .from(Invoices)
+            .where({
+                ID
+            });
     }
+);
+    /* Analytics */
 
-    const totalHours =
-        Number(project.consumedHours || 0);
+    this.on(
+        "getBurnSummary",
+        async (req) => {
+            const { projectID } =
+                req.data;
 
-    const totalAmount =
-        totalHours *
-        Number(budget.billingRateHr || 0);
+            const project =
+                await getOne(
+                    req,
+                    Projects,
+                    {
+                        ID: projectID
+                    },
+                    "Project not found"
+                );
 
-    const taxAmount =
-        totalAmount * 0.18;
+            const budget =
+                await getOne(
+                    req,
+                    Budgets,
+                    {
+                        project_ID:
+                            projectID
+                    },
+                    "Budget not found"
+                );
 
-    await INSERT.into(Invoices)
-        .entries({
+            const budgetAmount =
+                Number(
+                    budget.budgetAmount ||
+                    0
+                );
 
-            invoiceNumber:
-                'INV-' + Date.now(),
+            const consumedAmount =
+                Number(
+                    budget.consumedAmount ||
+                    0
+                );
 
-            project_ID:
-                projectID,
+            const burnPercentage =
+                budgetAmount > 0
+                    ? Number(
+                        (
+                            consumedAmount /
+                            budgetAmount *
+                            100
+                        ).toFixed(2)
+                    )
+                    : 0;
 
-            client_ID:
-                project.client_ID,
-
-            invoiceDate:
-                new Date(),
-
-            dueDate:
-                new Date(),
-
-            billableHours:
-                totalHours,
-
-            totalAmount,
-
-            taxAmount,
-
-            currencyCode:
-                budget.currencyCode,
-
-            paymentStatus:
-                'Draft',
-
-            status:
-                'Draft'
-        });
-
-    return await SELECT.one
-        .from(Invoices)
-        .orderBy({
-            createdAt : 'desc'
-        });
-});
-this.on('issue', async (req) => {
-
-    const ID = req.params[0].ID;
-
-    const invoice = await SELECT.one
-        .from(Invoices)
-        .where({ ID });
-
-    if (!invoice) {
-        return req.reject(
-            404,
-            'Invoice not found'
-        );
-    }
-
-    if (invoice.paymentStatus === 'Issued') {
-        return req.reject(
-            400,
-            'Invoice already issued'
-        );
-    }
-
-    await UPDATE(Invoices)
-        .set({
-            paymentStatus: 'Issued',
-            status: 'Issued'
-        })
-        .where({ ID });
-
-    return await SELECT.one
-        .from(Invoices)
-        .where({ ID });
-});
-
-this.on('markPaid', async (req) => {
-
-     const ID = req.params[0].ID;
-
-    const invoice = await SELECT.one
-        .from(Invoices)
-        .where({ ID });
-
-    if (!invoice) {
-        return req.reject(
-            404,
-            'Invoice not found'
-        );
-    }
-
-    if (invoice.paymentStatus !== 'Issued') {
-        return req.reject(
-            400,
-            'Only issued invoices can be marked as paid'
-        );
-    }
-
-    await UPDATE(Invoices)
-        .set({
-            paymentStatus: 'Paid',
-            status: 'Paid'
-        })
-        .where({ ID });
-
-    return await SELECT.one
-        .from(Invoices)
-        .where({ ID });
-});
-
-
-
-
-
-
-
-
-
-this.on('getBurnSummary', async (req) => {
-
-    const { projectID } = req.data;
-
-    const project = await SELECT.one
-        .from(Projects)
-        .where({ ID: projectID });
-
-    if (!project) {
-        return req.reject(
-            404,
-            'Project not found'
-        );
-    }
-
-    const budget = await SELECT.one
-        .from(Budgets)
-        .where({
-            project_ID: projectID
-        });
-
-    if (!budget) {
-        return req.reject(
-            404,
-            'Budget not found'
-        );
-    }
-
-    const burnPercentage =
-        (
-            Number(budget.consumedAmount || 0) /
-            Number(budget.budgetAmount || 1)
-        ) * 100;
-
-    return {
-
-        budgetAmount:
-            budget.budgetAmount,
-
-        consumedAmount:
-            budget.consumedAmount,
-
-        remainingAmount:
-            budget.remainingAmount,
-
-        plannedHours:
-            project.plannedHours,
-
-        consumedHours:
-            project.consumedHours,
-
-        burnPercentage:
-            Number(
-                burnPercentage.toFixed(2)
-            ),
-
-        budgetStatus:
-            budget.budgetStatus
-    };
-});
-
+            return {
+                budgetAmount:
+                    budget.budgetAmount,
+                consumedAmount:
+                    budget.consumedAmount,
+                remainingAmount:
+                    budget.remainingAmount,
+                plannedHours:
+                    project.plannedHours,
+                consumedHours:
+                    project.consumedHours,
+                burnPercentage,
+                budgetStatus:
+                    budget.budgetStatus
+            };
+        }
+    );
 });

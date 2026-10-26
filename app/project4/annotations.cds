@@ -3,142 +3,193 @@ using CatalogService as service from '../../srv/cat-service';
 annotate service.Invoices with @(
 
     UI.HeaderInfo : {
-        TypeName : 'Invoice',
+        TypeName       : 'Invoice',
         TypeNamePlural : 'Invoices',
 
         Title : {
+            $Type : 'UI.DataField',
             Value : invoiceNumber
         },
 
         Description : {
+            $Type : 'UI.DataField',
             Value : paymentStatus
         }
     },
 
-    UI.Identification : [
-
-        {
-            $Type : 'UI.DataFieldForAction',
-            Action : 'CatalogService.issue',
-            Label : 'Issue Invoice'
-        },
-
-        {
-            $Type : 'UI.DataFieldForAction',
-            Action : 'CatalogService.markPaid',
-            Label : 'Mark Invoice Paid'
-        }
-
-    ],
-
     UI.SelectionFields : [
         invoiceNumber,
         paymentStatus,
-        status
+        status,
+        invoiceDate,
+        dueDate
     ],
 
     UI.LineItem : [
-
         {
+            $Type : 'UI.DataField',
             Value : invoiceNumber,
             Label : 'Invoice Number'
         },
-
         {
+            $Type : 'UI.DataField',
+            Value : invoiceDate,
+            Label : 'Invoice Date'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : dueDate,
+            Label : 'Due Date'
+        },
+        {
+            $Type : 'UI.DataField',
             Value : billableHours,
             Label : 'Billable Hours'
         },
-
         {
+            $Type : 'UI.DataField',
             Value : totalAmount,
             Label : 'Total Amount'
         },
-
         {
+            $Type : 'UI.DataField',
             Value : taxAmount,
             Label : 'Tax Amount'
         },
-
         {
+            $Type : 'UI.DataField',
+            Value : currencyCode,
+            Label : 'Currency'
+        },
+        {
+            $Type : 'UI.DataField',
             Value : paymentStatus,
             Label : 'Payment Status'
         },
-
         {
+            $Type : 'UI.DataField',
             Value : status,
-            Label : 'Status'
+            Label : 'Invoice Status'
+        }
+    ],
+
+    UI.Identification : [
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Action : 'CatalogService.issue',
+            Label  : 'Issue Invoice'
+        },
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Action : 'CatalogService.markPaid',
+            Label  : 'Mark Invoice Paid'
         }
     ],
 
     UI.Facets : [
-
         {
-            $Type : 'UI.ReferenceFacet',
-            Label : 'Invoice Information',
-            Target : '@UI.FieldGroup#InvoiceInfo'
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'InvoiceInformationFacet',
+            Label  : 'Invoice Information',
+            Target : '@UI.FieldGroup#InvoiceInformation'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'PaymentInformationFacet',
+            Label  : 'Payment Information',
+            Target : '@UI.FieldGroup#PaymentInformation'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'InvoiceTimesheetsFacet',
+            Label  : 'Invoiced Timesheets',
+            Target : 'timesheets/@UI.LineItem'
         }
-
     ],
 
-    UI.FieldGroup #InvoiceInfo : {
-
+    UI.FieldGroup #InvoiceInformation : {
         Data : [
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Invoice Number',
-                Value : invoiceNumber
+                Value : invoiceNumber,
+                Label : 'Invoice Number'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Invoice Date',
-                Value : invoiceDate
+                Value : invoiceDate,
+                Label : 'Invoice Date'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Due Date',
-                Value : dueDate
+                Value : dueDate,
+                Label : 'Due Date'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Billable Hours',
-                Value : billableHours
+                Value : billableHours,
+                Label : 'Billable Hours'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Total Amount',
-                Value : totalAmount
+                Value : totalAmount,
+                Label : 'Total Amount'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Tax Amount',
-                Value : taxAmount
+                Value : taxAmount,
+                Label : 'Tax Amount'
             },
-
             {
                 $Type : 'UI.DataField',
-                Label : 'Currency',
-                Value : currencyCode
-            },
-
-            {
-                $Type : 'UI.DataField',
-                Label : 'Payment Status',
-                Value : paymentStatus
-            },
-
-            {
-                $Type : 'UI.DataField',
-                Label : 'Invoice Status',
-                Value : status
+                Value : currencyCode,
+                Label : 'Currency'
             }
+        ]
+    },
 
+    UI.FieldGroup #PaymentInformation : {
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : paymentStatus,
+                Label : 'Payment Status'
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : status,
+                Label : 'Invoice Status'
+            }
         ]
     }
+);
 
+annotate service.Timesheets with @(
+
+    UI.LineItem #InvoiceTimesheets : [
+        {
+            $Type : 'UI.DataField',
+            Value : weekStartDate,
+            Label : 'Week Start'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : weekEndDate,
+            Label : 'Week End'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalBillableHours,
+            Label : 'Billable Hours'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : status,
+            Label : 'Timesheet Status'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : approvedDate,
+            Label : 'Approved Date'
+        }
+    ]
 );

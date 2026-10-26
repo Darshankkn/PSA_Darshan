@@ -10,7 +10,11 @@
     "watch-project3": "cds watch --open project3/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-project4": "cds watch --open project4/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-managerdashboard": "cds watch --open managerdashboard/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-manager": "cds watch --open manager/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-manager": "cds watch --open manager/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-employee": "cds watch --open employee/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-employeed": "cds watch --open employeed/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-admin": "cds watch --open admin/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-dashboardhub": "cds watch --open dashboardhub.dashboardhub/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +30,7 @@
     "app/*"
   ],
   "devDependencies": {
+    "@sap/cds-dk": "^10",
     "cds-plugin-ui5": "^0.17.0"
   },
   "sapux": [

@@ -2,21 +2,22 @@ using { EnterprisePSA.db as db } from '../db/schema';
 
 service CatalogService {
 
-    /* ==========================
+    /* =====================================================
        DEPARTMENTS
-       ========================== */
+       ===================================================== */
 
-    entity DepartmentSRV as projection on db.Departments;
+    entity DepartmentSRV
+        as projection on db.Departments;
 
     action createDepartment(
-        departmentName : String,
-        description    : String
+        departmentName : String(60),
+        description    : String(255)
     ) returns DepartmentSRV;
 
     action updateDepartment(
         ID             : UUID,
-        departmentName : String,
-        description    : String
+        departmentName : String(60),
+        description    : String(255)
     ) returns DepartmentSRV;
 
     action deleteDepartment(
@@ -24,31 +25,32 @@ service CatalogService {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        EMPLOYEES
-       ========================== */
+       ===================================================== */
 
-    entity Employees as projection on db.Employees;
+    entity Employees
+        as projection on db.Employees;
 
     action createEmployee(
-        firstName    : String,
-        lastName     : String,
-        email        : String,
-        jobTitle     : String,
+        firstName    : String(60),
+        lastName     : String(60),
+        email        : String(100),
+        jobTitle     : String(60),
         joinDate     : Date,
         hourlyRate   : Decimal(15,2),
-        status       : String,
+        status       : String(20),
         departmentID : UUID
     ) returns Employees;
 
     action updateEmployee(
-        ID           : UUID,
-        firstName    : String,
-        lastName     : String,
-        email        : String,
-        jobTitle     : String,
-        hourlyRate   : Decimal(15,2),
-        status       : String
+        ID         : UUID,
+        firstName  : String(60),
+        lastName   : String(60),
+        email      : String(100),
+        jobTitle   : String(60),
+        hourlyRate : Decimal(15,2),
+        status     : String(20)
     ) returns Employees;
 
     action deleteEmployee(
@@ -56,23 +58,24 @@ service CatalogService {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        MANAGERS
-       ========================== */
+       ===================================================== */
 
-    entity Managers as projection on db.Managers;
+    entity Managers
+        as projection on db.Managers;
 
     action createManager(
         employeeID   : UUID,
         departmentID : UUID,
-        managerLevel : String,
-        status       : String
+        managerLevel : String(20),
+        status       : String(20)
     ) returns Managers;
 
     action updateManager(
         ID           : UUID,
-        managerLevel : String,
-        status       : String
+        managerLevel : String(20),
+        status       : String(20)
     ) returns Managers;
 
     action deleteManager(
@@ -80,31 +83,32 @@ service CatalogService {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        CLIENTS
-       ========================== */
+       ===================================================== */
 
-    entity Clients as projection on db.Clients;
+    entity Clients
+        as projection on db.Clients;
 
     action createClient(
-        clientName    : String,
-        contactPerson : String,
-        email         : String,
-        phoneNumber   : String,
-        country       : String,
-        industry      : String,
-        status        : String
+        clientName    : String(100),
+        contactPerson : String(100),
+        email         : String(100),
+        phoneNumber   : String(20),
+        country       : String(50),
+        industry      : String(50),
+        status        : String(20)
     ) returns Clients;
 
     action updateClient(
         ID            : UUID,
-        clientName    : String,
-        contactPerson : String,
-        email         : String,
-        phoneNumber   : String,
-        country       : String,
-        industry      : String,
-        status        : String
+        clientName    : String(100),
+        contactPerson : String(100),
+        email         : String(100),
+        phoneNumber   : String(20),
+        country       : String(50),
+        industry      : String(50),
+        status        : String(20)
     ) returns Clients;
 
     action deleteClient(
@@ -112,24 +116,26 @@ service CatalogService {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        PROJECTS
-       ========================== */
+       ===================================================== */
 
-    entity Projects as projection on db.Projects
-actions {
+    entity Projects
+        as projection on db.Projects
+        actions {
 
-    action recalculateBudget();
+            action recalculateBudget()
+                returns Budgets;
 
-    action generateInvoice();
-
-};
+            action generateInvoice()
+                returns Invoices;
+        };
 
     action createProject(
-        projectCode   : String,
-        projectName   : String,
-        status        : String,
-        billingType   : String,
+        projectCode   : String(20),
+        projectName   : String(100),
+        status        : String(20),
+        billingType   : String(20),
         startDate     : Date,
         endDate       : Date,
         plannedHours  : Decimal(10,2),
@@ -140,9 +146,9 @@ actions {
 
     action updateProject(
         ID            : UUID,
-        projectName   : String,
-        status        : String,
-        billingType   : String,
+        projectName   : String(100),
+        status        : String(20),
+        billingType   : String(20),
         startDate     : Date,
         endDate       : Date,
         plannedHours  : Decimal(10,2),
@@ -154,11 +160,12 @@ actions {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        BUDGETS
-       ========================== */
+       ===================================================== */
 
-    entity Budgets as projection on db.Budgets;
+    entity Budgets
+        as projection on db.Budgets;
 
     action createBudget(
         projectID       : UUID,
@@ -166,8 +173,8 @@ actions {
         consumedAmount  : Decimal(15,2),
         remainingAmount : Decimal(15,2),
         billingRateHr   : Decimal(15,2),
-        currencyCode    : String,
-        budgetStatus    : String
+        currencyCode    : String(3),
+        budgetStatus    : String(20)
     ) returns Budgets;
 
     action updateBudget(
@@ -176,7 +183,7 @@ actions {
         consumedAmount  : Decimal(15,2),
         remainingAmount : Decimal(15,2),
         billingRateHr   : Decimal(15,2),
-        budgetStatus    : String
+        budgetStatus    : String(20)
     ) returns Budgets;
 
     action deleteBudget(
@@ -184,28 +191,29 @@ actions {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        MILESTONES
-       ========================== */
+       ===================================================== */
 
-    entity Milestones as projection on db.Milestones;
+    entity Milestones
+        as projection on db.Milestones;
 
     action createMilestone(
         projectID         : UUID,
-        milestoneName     : String,
+        milestoneName     : String(100),
         startDate         : Date,
         endDate           : Date,
         completionPercent : Decimal(5,2),
-        status            : String
+        status            : String(20)
     ) returns Milestones;
 
     action updateMilestone(
         ID                : UUID,
-        milestoneName     : String,
+        milestoneName     : String(100),
         startDate         : Date,
         endDate           : Date,
         completionPercent : Decimal(5,2),
-        status            : String
+        status            : String(20)
     ) returns Milestones;
 
     action deleteMilestone(
@@ -213,28 +221,29 @@ actions {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        TASKS
-       ========================== */
+       ===================================================== */
 
-    entity Tasks as projection on db.Tasks;
+    entity Tasks
+        as projection on db.Tasks;
 
     action createTask(
         milestoneID    : UUID,
-        taskName       : String,
+        taskName       : String(100),
         startDate      : Date,
         endDate        : Date,
-        status         : String,
+        status         : String(20),
         estimatedHours : Decimal(10,2),
         actualHours    : Decimal(10,2)
     ) returns Tasks;
 
     action updateTask(
         ID             : UUID,
-        taskName       : String,
+        taskName       : String(100),
         startDate      : Date,
         endDate        : Date,
-        status         : String,
+        status         : String(20),
         estimatedHours : Decimal(10,2),
         actualHours    : Decimal(10,2)
     ) returns Tasks;
@@ -244,22 +253,24 @@ actions {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        TIMESHEETS
-       ========================== */
+       ===================================================== */
 
-    entity Timesheets as projection on db.Timesheets
-actions {
+    entity Timesheets
+        as projection on db.Timesheets
+        actions {
 
-    action  submitTimesheet();
+            action submitTimesheet()
+                returns Timesheets;
 
-    action approveTimesheet();
+            action approveTimesheet()
+                returns Timesheets;
 
-    action rejectTimesheet(
-        reason : String(255)
-    );
-
-};
+            action rejectTimesheet(
+                reason : String(255)
+            ) returns Timesheets;
+        };
 
     action createTimesheet(
         employeeID         : UUID,
@@ -270,7 +281,7 @@ actions {
         totalBillableHours : Decimal(10,2),
         submittedDate      : Date,
         approvedDate       : Date,
-        status             : String
+        status             : String(20)
     ) returns Timesheets;
 
     action updateTimesheet(
@@ -280,32 +291,20 @@ actions {
         totalBillableHours : Decimal(10,2),
         submittedDate      : Date,
         approvedDate       : Date,
-        status             : String
+        status             : String(20)
     ) returns Timesheets;
 
     action deleteTimesheet(
         ID : UUID
     ) returns String;
 
-    // action submitTimesheet(
-    //     ID : UUID
-    // ) returns Timesheets;
 
-    // action approveTimesheet(
-    //     ID : UUID
-    // ) returns Timesheets;
-
-    // action rejectTimesheet(
-    //     ID     : UUID,
-    //     reason : String(255)
-    // ) returns Timesheets;
-
-
-    /* ==========================
+    /* =====================================================
        TIMESHEET ENTRIES
-       ========================== */
+       ===================================================== */
 
-    entity TimesheetEntries as projection on db.TimesheetEntries;
+    entity TimesheetEntries
+        as projection on db.TimesheetEntries;
 
     action createTimesheetEntry(
         timesheetID : UUID,
@@ -327,21 +326,23 @@ actions {
     ) returns String;
 
 
-    /* ==========================
+    /* =====================================================
        INVOICES
-       ========================== */
+       ===================================================== */
 
-    entity Invoices as projection on db.Invoices
-actions {
+    entity Invoices
+        as projection on db.Invoices
+        actions {
 
-    action issue();
+            action issue()
+                returns Invoices;
 
-    action markPaid();
-
-};
+            action markPaid()
+                returns Invoices;
+        };
 
     action createInvoice(
-        invoiceNumber : String,
+        invoiceNumber : String(30),
         projectID     : UUID,
         clientID      : UUID,
         invoiceDate   : Date,
@@ -349,9 +350,9 @@ actions {
         billableHours : Decimal(10,2),
         totalAmount   : Decimal(15,2),
         taxAmount     : Decimal(15,2),
-        currencyCode  : String,
-        paymentStatus : String,
-        status        : String
+        currencyCode  : String(3),
+        paymentStatus : String(20),
+        status        : String(20)
     ) returns Invoices;
 
     action updateInvoice(
@@ -361,42 +362,18 @@ actions {
         billableHours : Decimal(10,2),
         totalAmount   : Decimal(15,2),
         taxAmount     : Decimal(15,2),
-        paymentStatus : String,
-        status        : String
+        paymentStatus : String(20),
+        status        : String(20)
     ) returns Invoices;
 
     action deleteInvoice(
         ID : UUID
     ) returns String;
 
-    // action issueInvoice(
-    //     ID : UUID
-    // ) returns Invoices;
 
-    // action markInvoicePaid(
-    //     ID          : UUID,
-    //     paymentDate : Date
-    // ) returns Invoices;
-
-
-    /* ==========================
-       BUSINESS ACTIONS
-       ========================== */
-
-    // action recalculateBudget(
-    //     ID : UUID
-    // ) returns Budgets;
-
-    // action generateInvoice(
-    //     projectID  : UUID,
-    //     periodFrom : Date,
-    //     periodTo   : Date
-    // ) returns Invoices;
-
-
-    /* ==========================
-       ANALYTICS FUNCTIONS
-       ========================== */
+    /* =====================================================
+       ANALYTICS FUNCTION
+       ===================================================== */
 
     function getBurnSummary(
         projectID : UUID
@@ -404,9 +381,9 @@ actions {
 }
 
 
-/* ==========================
+/* =====================================================
    CUSTOM RETURN TYPE
-   ========================== */
+   ===================================================== */
 
 type BurnSummary {
     budgetAmount    : Decimal(15,2);
