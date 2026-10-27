@@ -161,59 +161,6 @@
                     </GenericTile>
                 </FlexBox>
 
-                <!-- ================================================= -->
-                <!-- OVERALL PROJECT COMPLETION                        -->
-                <!-- ================================================= -->
-
-                <Panel
-                    id="overallCompletionPanel"
-                    headerText="Overall Project Completion"
-                    width="100%"
-                    expandable="false"
-                    class="sapUiSmallMarginTop sapUiSmallMarginBottom">
-
-                    <content>
-                        <VBox
-                            id="overallCompletionBox"
-                            width="100%"
-                            class="sapUiSmallMargin">
-
-                            <HBox
-                                width="100%"
-                                justifyContent="SpaceBetween"
-                                alignItems="Center"
-                                class="sapUiTinyMarginBottom">
-
-                                <Title
-                                    id="overallCompletionTitle"
-                                    text="Average completion of managed projects"
-                                    level="H4" />
-
-                                <ObjectStatus
-                                    id="overallCompletionStatus"
-                                    text="{dashboard>/overallCompletionDisplay}"
-                                    state="{dashboard>/overallCompletionState}"
-                                    icon="sap-icon://business-objects-experience" />
-                            </HBox>
-
-                            <ProgressIndicator
-                                id="overallCompletionProgress"
-                                width="100%"
-                                height="1.5rem"
-                                percentValue="{dashboard>/overallCompletion}"
-                                displayValue="{dashboard>/overallCompletionDisplay}"
-                                state="{dashboard>/overallCompletionState}"
-                                showValue="true"
-                                tooltip="Average completion across all Projects assigned to the selected Manager" />
-
-                            <Text
-                                id="overallCompletionHelp"
-                                text="Completion is calculated from Milestone percentages. When a Project has no Milestones, consumed hours are compared with planned hours."
-                                wrapping="true"
-                                class="sapUiTinyMarginTop" />
-                        </VBox>
-                    </content>
-                </Panel>
 
                 <!-- ================================================= -->
                 <!-- DASHBOARD SECTIONS                                -->

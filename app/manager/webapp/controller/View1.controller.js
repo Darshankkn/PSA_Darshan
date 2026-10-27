@@ -46,7 +46,8 @@ sap.ui.define([
 
                 approvals: [],
                 projects: [],
-                invoices: []
+                invoices: [],
+                teamMembers: [],
             });
 
             oDashboardModel.setSizeLimit(1000);
@@ -757,6 +758,30 @@ sap.ui.define([
 
                 aEmployees.forEach(
                     function (oEmployee) {
+                        
+/* ================= MANAGER'S TEAM ================= */
+
+var aTeamMembers = aEmployees
+    .filter(function (oEmployee) {
+        return oEmployee.managerProfile_ID === sManagerID;
+    })
+    .map(function (oEmployee) {
+        return {
+            ID: oEmployee.ID,
+            firstName: oEmployee.firstName || "",
+            lastName: oEmployee.lastName || "",
+            fullName: [
+                oEmployee.firstName,
+                oEmployee.lastName
+            ].filter(Boolean).join(" "),
+            email: oEmployee.email || "",
+            department_ID: oEmployee.department_ID || ""
+        };
+    })
+    .sort(function (a, b) {
+        return a.fullName.localeCompare(b.fullName);
+    });
+
                         mEmployees.set(
                             oEmployee.ID,
                             oEmployee
